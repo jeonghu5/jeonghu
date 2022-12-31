@@ -14,6 +14,7 @@ public:
 	CRect m_Player;
 	CRect m_Ball;
 	CRect m_Break[50];
+	CRect item;
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_TIMERING2_DIALOG };
@@ -46,4 +47,5 @@ public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	int bi;
 	int j;
+	int hello;
 };

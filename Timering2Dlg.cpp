@@ -61,6 +61,7 @@ CTimering2Dlg::CTimering2Dlg(CWnd* pParent /*=NULL*/)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	j = 0;
+	hello = 0;
 }
 
 void CTimering2Dlg::DoDataExchange(CDataExchange* pDX)
@@ -112,6 +113,8 @@ BOOL CTimering2Dlg::OnInitDialog()
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 	b = -10;
 	f = 0;
+	srand((unsigned int)time(NULL));
+	hello = rand()%40+10;
 	m_Player = CRect(210, 300, 280, 310);
 	m_Ball = CRect(240, 290, 250, 300);
 	int v = 0;
@@ -125,6 +128,7 @@ BOOL CTimering2Dlg::OnInitDialog()
 		v = v + 20;
 		j = 0;
 	}
+	item = CRect(0, 0, 25, 25);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -199,6 +203,7 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 	dc.SelectObject(&red); 
 	dc.Ellipse(m_Ball);
 	dc.Rectangle(m_Player);
+	
 
 	int j, zzz = 250;
 	CBrush blue[5];
@@ -217,7 +222,7 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 	{
 		m_Ball.OffsetRect(f, b);
 	}
-	  
+	hello = 44;
 	for (int i = 0; i < 50; i++)
 	{
 	    if (IntersectRect(&hi, &m_Ball, &m_Break[i]))
@@ -226,9 +231,20 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 			b = 10; 
 			m_Ball.OffsetRect(f, b); m_Ball.OffsetRect( 0, b);
 			bi++;
+
+			if (i == hello)
+			{
+				item.MoveToXY(m_Break[hello].CenterPoint().x, m_Break[hello].CenterPoint().y);
+				CBrush green;
+				green.CreateSolidBrush(RGB(0, 240, 0));
+				dc.SelectObject(&green);
+				dc.Ellipse(item);
+				
+			}
 	    }
     }
 
+    item.OffsetRect(0, -10);
 	
 
 	c = (m_Player.right + m_Player.left) / 2;
@@ -269,7 +285,7 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 		OnOK();
 	}
 
-    
+
     if (bi == 50)
 	{
         //CBrush old;
