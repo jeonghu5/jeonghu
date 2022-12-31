@@ -201,7 +201,7 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 	br.CreateSolidBrush(RGB(0, 0, 200));
 	dc.SelectObject(&br);
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 30; i++)
 	{
 		dc.Rectangle(m_Break[i]);
 	}
