@@ -13,7 +13,7 @@ public:
 	CTimering2Dlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
 	CRect m_Player;
 	CRect m_Ball;
-	CRect m_Break[30];
+	CRect m_Break[50];
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_TIMERING2_DIALOG };
@@ -45,4 +45,5 @@ public:
 	int f;
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	int bi;
+	int j;
 };
