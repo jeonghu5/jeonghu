@@ -113,11 +113,15 @@ BOOL CTimering2Dlg::OnInitDialog()
 	f = 0;
 	m_Player = CRect(210, 300, 280, 310);
 	m_Ball = CRect(240, 290, 250, 300);
-	int j = 0;
-	for (int i = 0; i <10; i++)
+	int j,v = 0;
+	for (int i = 0; i <2; i++)
 	{
-		m_Break[i] = CRect(j, 0, j+50, 20);
+		for(int k=0;k<10;k++)
+		{ 
+		m_Break[10*i+k] = CRect(j, v, j+50, v+20);
 		j = j + 50;
+		}
+		v = v + 20;
 	}
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -196,6 +200,7 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 	CBrush br;
 	br.CreateSolidBrush(RGB(0, 0, 200));
 	dc.SelectObject(&br);
+
 	for (int i = 0; i < 10; i++)
 	{
 		dc.Rectangle(m_Break[i]);
@@ -260,10 +265,11 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
     
     if (bi == 10)
 	{
-        CBrush old;
-	    old.CreateSolidBrush(RGB(255, 255, 255));
-		dc.SelectObject(&old);
-		dc.Rectangle(0, 0, 600, 600);
+        //CBrush old;
+	    //old.CreateSolidBrush(RGB(255, 255, 255));
+		//dc.SelectObject(&old);
+		//dc.Rectangle(0, 0, 600, 600);
+		OnOK();
 	}
 
 	CDialogEx::OnTimer(nIDEvent);

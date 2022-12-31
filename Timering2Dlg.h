@@ -13,7 +13,7 @@ public:
 	CTimering2Dlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
 	CRect m_Player;
 	CRect m_Ball;
-	CRect m_Break[10];
+	CRect m_Break[30];
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_TIMERING2_DIALOG };
