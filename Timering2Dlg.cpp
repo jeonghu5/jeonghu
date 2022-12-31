@@ -196,7 +196,7 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 
 	CBrush red;
 	red.CreateSolidBrush(RGB(200, 0, 0));
-	dc.SelectObject(&red);
+	dc.SelectObject(&red); 
 	dc.Ellipse(m_Ball);
 	dc.Rectangle(m_Player);
 
