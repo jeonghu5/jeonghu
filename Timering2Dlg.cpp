@@ -236,14 +236,16 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 			m_Break[i].DeflateRect(25, 0);
 			if (hi.bottom == m_Break[i].bottom || hi.top == m_Break[i].top)
 			{
+				m_Ball.OffsetRect(-x, -y);
 				y = -y;
-				m_Ball.OffsetRect(0, y); m_Ball.OffsetRect(0, y);
+				m_Ball.OffsetRect(x, y);
 
 			}
 			else
 			{ 
+				m_Ball.OffsetRect(-x,-y);
 				x = -x;
-				m_Ball.OffsetRect(x, 0);m_Ball.OffsetRect(x, 0);
+				m_Ball.OffsetRect(x, y);
 			}
 
 			bi++;
@@ -276,20 +278,23 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 	d = (m_Ball.right + m_Ball.left) / 2;
 	if (IntersectRect(&hi, &m_Ball, &m_Player))
 	{
-		y = -10;
 		if (c + 5 < d)//오른쪽으로
 		{
-			 x =     10;m_Ball.OffsetRect(x,y*2);
-			 
+			m_Ball.OffsetRect( -x, -y);
+			x = 10;y = -10;
+			m_Ball.OffsetRect(x, y);
 		}
 		else if (c-5 > d)//왼쪽으로
 		{
-			x = -10;m_Ball.OffsetRect(x,y*2);
+			m_Ball.OffsetRect(-x , -y);
+			x = -10;y = -10;
+			m_Ball.OffsetRect(x, y);
 		}
 		else
 		{
-			m_Ball.OffsetRect(-x,y*2);
-			x = 0;
+			m_Ball.OffsetRect(-x,-y);
+			x = 0;y = -10;
+			m_Ball.OffsetRect(x, y);
 		}
 	}
 
