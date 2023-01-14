@@ -52,16 +52,19 @@ END_MESSAGE_MAP()
 CTimering2Dlg::CTimering2Dlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_TIMERING2_DIALOG, pParent)
 	, a(0)
-	, b(0)
 	, c(0)
 	, d(0)
 	, e(0)
-	, f(0)
 	, bi(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	j = 0;
 	hello = 0;
+	holly = 0;
+	//  speed = 0;
+	//  test = 0;
+	x = 0;
+	y = 0;
 }
 
 void CTimering2Dlg::DoDataExchange(CDataExchange* pDX)
@@ -111,10 +114,10 @@ BOOL CTimering2Dlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-	b = -10;
-	f = 0;
+	x = 0;
+	y = -10;
 	srand((unsigned int)time(NULL));
-	hello = rand()%40+10;
+	hello = rand()%10+40;
 	m_Player = CRect(210, 300, 280, 310);
 	m_Ball = CRect(240, 290, 250, 300);
 	int v = 0;
@@ -122,13 +125,13 @@ BOOL CTimering2Dlg::OnInitDialog()
 	{
 		for(int k=0;k<10;k++)
 		{ 
-		m_Break[10*i+k] = CRect(j, v, j+50, v+20);
+		m_Break[10*i+k] = CRect(j, v, j+50, v+30);
 		j = j + 50;
 		}
-		v = v + 20;
+		v = v + 30;
 		j = 0;
 	}
-	item = CRect(0, 0, 25, 25);
+	item = CRect(0, 0, 20, 20);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -187,8 +190,10 @@ HCURSOR CTimering2Dlg::OnQueryDragIcon()
 void CTimering2Dlg::OnBnClickedButton1()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	
 	SetTimer(1, 50, NULL);
 }
+
 
 
 void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
@@ -218,67 +223,89 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 		zzz = zzz - 40;
 	}
 
-    if (a == 1)
+	if (a == 1)
 	{
-		m_Ball.OffsetRect(f, b);
+		m_Ball.OffsetRect(x, y);
 	}
-	hello = 44;
+	
 	for (int i = 0; i < 50; i++)
 	{
+		
 	    if (IntersectRect(&hi, &m_Ball, &m_Break[i]))
 	    {
 			m_Break[i].DeflateRect(25, 0);
-			b = 10; 
-			m_Ball.OffsetRect(f, b); m_Ball.OffsetRect( 0, b);
+			if (hi.bottom == m_Break[i].bottom || hi.top == m_Break[i].top)
+			{
+				y = -y;
+				m_Ball.OffsetRect(0, y); m_Ball.OffsetRect(0, y);
+
+			}
+			else
+			{ 
+				x = -x;
+				m_Ball.OffsetRect(x, 0);m_Ball.OffsetRect(x, 0);
+			}
+
 			bi++;
 
 			if (i == hello)
-			{
-				item.MoveToXY(m_Break[hello].CenterPoint().x, m_Break[hello].CenterPoint().y);
-				CBrush green;
-				green.CreateSolidBrush(RGB(0, 240, 0));
-				dc.SelectObject(&green);
-				dc.Ellipse(item);
-				
+			{item.MoveToXY(m_Break[hello].CenterPoint().x, m_Break[hello].CenterPoint().y);
+	    
+				holly = 1;
 			}
 	    }
     }
 
-    item.OffsetRect(0, -10);
-	
+	if (holly == 1)
+	{
+		CBrush green;
+		green.CreateSolidBrush(RGB(0, 240, 0));
+		dc.SelectObject(&green);
+		dc.Ellipse(item);
+		item.OffsetRect(0, 5);
+	}
+    
+	if (IntersectRect(&hi, &m_Player, &item))
+	{
+		item.DeflateRect(10, 0);
+		KillTimer(1);
+		SetTimer(2, 35, NULL);
+	}
 
 	c = (m_Player.right + m_Player.left) / 2;
 	d = (m_Ball.right + m_Ball.left) / 2;
 	if (IntersectRect(&hi, &m_Ball, &m_Player))
 	{
-		b = -10;
-		if (c+5 < d)
+		y = -10;
+		if (c + 5 < d)//오른쪽으로
 		{
-			 f = 10;m_Ball.OffsetRect(f,b-10);
+			 x =     10;m_Ball.OffsetRect(x,y*2);
 			 
 		}
-		else if (c-5 > d)
+		else if (c-5 > d)//왼쪽으로
 		{
-			f = -10;m_Ball.OffsetRect(f,b-10);
+			x = -10;m_Ball.OffsetRect(x,y*2);
 		}
 		else
 		{
-			m_Ball.OffsetRect(-f,b-10);
-			f = 0;
+			m_Ball.OffsetRect(-x,y*2);
+			x = 0;
 		}
 	}
 
+	
+
 	if (m_Ball.top ==0)
 	{
-		b = 10;
+		y = 10;
 	}
 	if (m_Ball.left ==0)
 	{
-		f = -f;
+		x = -x;
 	}
-	if (m_Ball.right ==500)
+	if  (m_Ball.right ==500)
 	{
-		f = -f;
+		x = -x;
 	}
 	if (m_Ball.bottom > 350)
 	{
@@ -288,13 +315,10 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 
     if (bi == 50)
 	{
-        //CBrush old;
-	    //old.CreateSolidBrush(RGB(255, 255, 255));
-		//dc.SelectObject(&old);
-		//dc.Rectangle(0, 0, 600, 600);
 		OnOK();
 	}
 
+    
 	CDialogEx::OnTimer(nIDEvent);
 }
 

@@ -15,6 +15,7 @@ public:
 	CRect m_Ball;
 	CRect m_Break[50];
 	CRect item;
+	CRect m_Ball1;
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_TIMERING2_DIALOG };
@@ -39,13 +40,18 @@ public:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	int a;
-	int b;
+//	int b;
 	int c;
 	int d;
 	int e;
-	int f;
+//	int f;
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	int bi;
 	int j;
 	int hello;
+	int holly;
+//	int speed;
+//	int test;
+	int x;
+	int y;
 };
