@@ -119,7 +119,7 @@ BOOL CTimering2Dlg::OnInitDialog()
 	srand((unsigned int)time(NULL));
 	hello = rand()%10+40;
 	m_Player = CRect(210, 300, 280, 310);
-	m_Ball = CRect(240, 290, 250, 300);
+	m_Ball = CRect(240, 280, 250, 290);
 	int v = 0;
 	for (int i = 0; i <5; i++)
 	{
@@ -191,7 +191,7 @@ void CTimering2Dlg::OnBnClickedButton1()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	
-	SetTimer(1, 50, NULL);
+	SetTimer(1, 100, NULL);
 }
 
 
@@ -205,11 +205,7 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 
 	CBrush red;
 	red.CreateSolidBrush(RGB(200, 0, 0));
-	dc.SelectObject(&red); 
-	dc.Ellipse(m_Ball);
-	dc.Rectangle(m_Player);
 	
-
 	int j, zzz = 250;
 	CBrush blue[5];
 	for (j = 0; j<5; j++)
@@ -222,52 +218,49 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 		}
 		zzz = zzz - 40;
 	}
-
-	if (a == 1)
+	
+	
+	a = 1;
+	for (int i = 0; i < 50; i++)//벽돌에 닿았을때
 	{
-		m_Ball.OffsetRect(x, y);
+		if (m_Ball.top == m_Break[i].bottom || m_Ball.bottom==m_Break[i].top)
+		{
+			if (m_Ball.right<=m_Break[i].right&&m_Ball.left>=m_Break[i].left)
+			{
+				m_Break[i].SetRectEmpty();
+				y = -y;
+			}
+		}
+  		else if (x == 10 || x == -10)
+		{
+	    	if (m_Ball.left == m_Break[i].right || m_Ball.right == m_Break[i].left)
+	    	{
+	    		if (m_Ball.bottom <= m_Break[i].bottom && m_Ball.top >= m_Break[i].top)
+	    		{
+	    			m_Break[i].SetRectEmpty();
+	    			x = -x;
+	    		}
+				else if (m_Ball.top == m_Break[i].bottom || m_Ball.bottom == m_Break[i].top)
+		    	{
+		    		m_Break[i].SetRectEmpty();
+		    		x = -x; y = -y; OnOK();
+		    	}
+            }
+		}
 	}
 	
-	for (int i = 0; i < 50; i++)
-	{
-		
-	    if (IntersectRect(&hi, &m_Ball, &m_Break[i]))
-	    {
-			m_Break[i].DeflateRect(25, 0);
-			if (hi.bottom == m_Break[i].bottom || hi.top == m_Break[i].top)
-			{
-				m_Ball.OffsetRect(-x, -y);
-				y = -y;
-				m_Ball.OffsetRect(x, y);
 
-			}
-			else
-			{ 
-				m_Ball.OffsetRect(-x,-y);
-				x = -x;
-				m_Ball.OffsetRect(x, y);
-			}
-
-			bi++;
-
-			if (i == hello)
-			{item.MoveToXY(m_Break[hello].CenterPoint().x, m_Break[hello].CenterPoint().y);
-	    
-				holly = 1;
-			}
-	    }
-    }
-
-	if (holly == 1)
+	if (holly == 1)//아이템 생성
 	{
 		CBrush green;
-		green.CreateSolidBrush(RGB(0, 240, 0));
-		dc.SelectObject(&green);
-		dc.Ellipse(item);
-		item.OffsetRect(0, 5);
+	    green.CreateSolidBrush(RGB(0, 240, 0));
+	    dc.SelectObject(&green);
+	    dc.Ellipse(item);
+	    item.OffsetRect(0, 5);
 	}
     
-	if (IntersectRect(&hi, &m_Player, &item))
+
+	if (IntersectRect(&hi, &m_Player, &item))//아이템 먹었을때
 	{
 		item.DeflateRect(10, 0);
 		KillTimer(1);
@@ -276,55 +269,57 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 
 	c = (m_Player.right + m_Player.left) / 2;
 	d = (m_Ball.right + m_Ball.left) / 2;
-	if (IntersectRect(&hi, &m_Ball, &m_Player))
+	if (m_Ball.bottom==m_Player.top)//조작바에 닿았을때
 	{
-		if (c + 5 < d)//오른쪽으로
+		if (m_Ball.right <= m_Player.right+7 && m_Ball.left >= m_Player.left-7)
 		{
-			m_Ball.OffsetRect( -x, -y);
-			x = 10;y = -10;
-			m_Ball.OffsetRect(x, y);
-		}
-		else if (c-5 > d)//왼쪽으로
-		{
-			m_Ball.OffsetRect(-x , -y);
-			x = -10;y = -10;
-			m_Ball.OffsetRect(x, y);
-		}
-		else
-		{
-			m_Ball.OffsetRect(-x,-y);
-			x = 0;y = -10;
-			m_Ball.OffsetRect(x, y);
+			if (c + 5 < d)//오른쪽으로
+			{
+				x = 10; y = -10;
+			}
+			else if (c - 5 > d)//왼쪽으로
+			{
+				x = -10; y = -10;
+			}
+			else//위쪽으로
+			{
+				x = 0; y = -10;
+			}
 		}
 	}
 
-	
-
-	if (m_Ball.top ==0)
+	if (m_Ball.top ==0)//위쪽벽
 	{
 		y = 10;
 	}
-	if (m_Ball.left ==0)
+	if (m_Ball.left ==0)//왼쪽벽
 	{
 		x = -x;
 	}
-	if  (m_Ball.right ==500)
+	if  (m_Ball.right ==500)//오른쪽 벽
 	{
 		x = -x;
 	}
-	if (m_Ball.bottom > 350)
+	if (m_Ball.bottom > 350)//게임오버
 	{
 		OnOK();
 	}
 
 
-    if (bi == 50)
+    if (bi == 50)//게임성공
 	{
 		OnOK();
 	}
 
-    
-	CDialogEx::OnTimer(nIDEvent);
+	if (a == 1)//공 움직임 시작(스페이스바)
+	{
+		m_Ball.OffsetRect(x, y);
+	}
+
+    dc.SelectObject(&red); 	
+	dc.Rectangle(m_Player);
+    dc.Ellipse(m_Ball);
+  	CDialogEx::OnTimer(nIDEvent);
 }
 
 
