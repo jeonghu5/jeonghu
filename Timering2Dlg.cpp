@@ -220,19 +220,37 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 	}
 	
 	
-	a = 1;
+	a = 1; 
 	for (int i = 0; i < 50; i++)//벽돌에 닿았을때
 	{
-		if (m_Ball.top == m_Break[i].bottom || m_Ball.bottom==m_Break[i].top)
+		if (m_Ball.top == m_Break[i].bottom || m_Ball.bottom == m_Break[i].top)
 		{
-			if (m_Ball.right<=m_Break[i].right&&m_Ball.left>=m_Break[i].left)
+			if (m_Ball.right <= m_Break[i].right && m_Ball.left >= m_Break[i].left)
 			{
+				if (i == hello)
+				{
+					item.right = m_Break[i].right; item.top = m_Break[i].top;
+					item.left = m_Break[i].left; item.bottom = m_Break[i].bottom;
+					holly = 1;
+				}
 				m_Break[i].SetRectEmpty();
 				y = -y;
-				if (i == hello)
-			    {
-			    	holly = 1;
-			    }
+				break;
+			}
+			else if (x == 10 || x == -10 )
+			{
+				if (m_Ball.left == m_Break[i].right || m_Ball.right == m_Break[i].left)
+				{
+					if (i == hello)
+					{
+						item.right = m_Break[i].right; item.top = m_Break[i].top;
+						item.left = m_Break[i].left; item.bottom = m_Break[i].bottom;
+						holly = 1;
+					}
+					m_Break[i].SetRectEmpty();
+					x = -x; y = -y;
+					
+				}
 			}
 		}
   		else if (x == 10 || x == -10)
@@ -241,22 +259,16 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 	    	{
 	    		if (m_Ball.bottom <= m_Break[i].bottom && m_Ball.top >= m_Break[i].top)
 	    		{
+                    if (i == hello)
+					{
+						item.right = m_Break[i].right; item.top = m_Break[i].top;
+						item.left = m_Break[i].left; item.bottom = m_Break[i].bottom;
+						holly = 1;
+					}
 	    			m_Break[i].SetRectEmpty();
 	    			x = -x;
-					if (i == hello)
-					{
-						holly = 1;
-					}
+					break;
 	    		}
-				else if (m_Ball.top == m_Break[i].bottom || m_Ball.bottom == m_Break[i].top)
-		    	{
-		    		m_Break[i].SetRectEmpty();
-		    		x = -x; y = -y; OnOK();
-					if (i == hello)
-					{
-						holly = 1;
-					}
-		    	}
             }
 		}
 	}
@@ -274,7 +286,7 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 
 	if (IntersectRect(&hi, &m_Player, &item))//아이템 먹었을때
 	{
-		item.DeflateRect(10, 0);
+		item.SetRectEmpty();
 		KillTimer(1);
 		SetTimer(2, 35, NULL);
 	}
