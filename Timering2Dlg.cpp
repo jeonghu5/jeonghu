@@ -229,6 +229,10 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 			{
 				m_Break[i].SetRectEmpty();
 				y = -y;
+				if (i == hello)
+			    {
+			    	holly = 1;
+			    }
 			}
 		}
   		else if (x == 10 || x == -10)
@@ -239,11 +243,19 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 	    		{
 	    			m_Break[i].SetRectEmpty();
 	    			x = -x;
+					if (i == hello)
+					{
+						holly = 1;
+					}
 	    		}
 				else if (m_Ball.top == m_Break[i].bottom || m_Ball.bottom == m_Break[i].top)
 		    	{
 		    		m_Break[i].SetRectEmpty();
 		    		x = -x; y = -y; OnOK();
+					if (i == hello)
+					{
+						holly = 1;
+					}
 		    	}
             }
 		}
