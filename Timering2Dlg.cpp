@@ -6,6 +6,7 @@
 #include "Timering2.h"
 #include "Timering2Dlg.h"
 #include "afxdialogex.h"
+#include "CRectJH.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -65,6 +66,7 @@ CTimering2Dlg::CTimering2Dlg(CWnd* pParent /*=NULL*/)
 	//  test = 0;
 	x = 0;
 	y = 0;
+	round = 0;
 }
 
 void CTimering2Dlg::DoDataExchange(CDataExchange* pDX)
@@ -76,7 +78,6 @@ BEGIN_MESSAGE_MAP(CTimering2Dlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_BUTTON1, &CTimering2Dlg::OnBnClickedButton1)
 	ON_WM_TIMER()
 	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
@@ -87,7 +88,7 @@ END_MESSAGE_MAP()
 BOOL CTimering2Dlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-
+	SetTimer(1, 50, NULL);
 	// 시스템 메뉴에 "정보..." 메뉴 항목을 추가합니다.
 
 	// IDM_ABOUTBOX는 시스템 명령 범위에 있어야 합니다.
@@ -116,16 +117,47 @@ BOOL CTimering2Dlg::OnInitDialog()
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 	x = 0;
 	y = -10;
+	round = 1;
 	srand((unsigned int)time(NULL));
 	hello = rand()%10+40;
 	m_Player = CRect(210, 300, 280, 310);
 	m_Ball = CRect(240, 280, 250, 290);
 	int v = 0;
+
+	CRect tmp;
+
+	for (int y = 0; y < 5; y++)
+	{
+		tmp = CRect(0, 0, 50, 30);
+		tmp.MoveToXY(0, 50 * y);
+		for (int x = 0; x < 10; x++)
+		{
+			m_Break[y * 10 + x] = tmp;
+			m_jhBreak[y * 10 + x] = tmp;
+			m_jhBreak[y * 10 + x].set4Rect();
+
+			tmp.OffsetRect(50, 0);
+		}
+	}
+
+
+
 	for (int i = 0; i <5; i++)
 	{
 		for(int k=0;k<10;k++)
 		{ 
 		m_Break[10*i+k] = CRect(j, v, j+50, v+30);
+		j = j + 50;
+		}
+		v = v + 30;
+		j = 0;
+	}
+	v = 0;
+	for (int i = 0; i <5; i++)
+	{
+		for(int k=0;k<10;k++)
+		{ 
+		m_Break2[10*i+k] = CRect(j, v, j+50, v+30);
 		j = j + 50;
 		}
 		v = v + 30;
@@ -157,7 +189,7 @@ void CTimering2Dlg::OnPaint()
 	if (IsIconic())
 	{
 		CPaintDC dc(this); // 그리기를 위한 디바이스 컨텍스트입니다.
-
+		
 		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
 
 		// 클라이언트 사각형에서 아이콘을 가운데에 맞춥니다.
@@ -191,8 +223,9 @@ void CTimering2Dlg::OnBnClickedButton1()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	
-	SetTimer(1, 100, NULL);
+	SetTimer(1, 50, NULL);
 }
+
 
 
 
@@ -206,40 +239,47 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 	CBrush red;
 	red.CreateSolidBrush(RGB(200, 0, 0));
 	
-	int j, zzz = 250;
+	CBrush white;
+	white.CreateSolidBrush(RGB(255,255, 255));
+
+    CBrush green;
+	green.CreateSolidBrush(RGB(0, 240, 0));
+
+	CBrush blue1;
+	blue1.CreateSolidBrush(RGB(0, 0, 200));
+
 	CBrush blue[5];
-	for (j = 0; j<5; j++)
+    int j, zzz = 250;
+
+	if (round == 1)
 	{
-		blue[j].CreateSolidBrush(RGB(0, 0, zzz));
-		dc.SelectObject(&blue[j]);
-		for (int i = 0; i < 10; i++)
+		for (j = 0; j < 5; j++)
 		{
-			dc.Rectangle(m_Break[10*j+i]);
+			blue[j].CreateSolidBrush(RGB(0, 0, zzz));
+			dc.SelectObject(&blue[j]);
+			for (int i = 0; i < 10; i++)
+			{
+				dc.Rectangle(m_Break[10 * j + i]);
+			}
+			zzz = zzz - 40;
 		}
-		zzz = zzz - 40;
 	}
-	
-	
-	a = 1; 
+	else if (round == 2)
+	{
+		dc.SelectObject(&blue1);
+		for (int k=0;k<20;k++)
+		{
+			dc.Rectangle(m_Break[k]);
+		}
+	}
+
 	for (int i = 0; i < 50; i++)//벽돌에 닿았을때
 	{
-		if (m_Ball.top == m_Break[i].bottom || m_Ball.bottom == m_Break[i].top)
+		if (x == 10 || x == -10)
 		{
-			if (m_Ball.right <= m_Break[i].right && m_Ball.left >= m_Break[i].left)
+			if (m_Ball.top == m_Break[i].bottom || m_Ball.bottom == m_Break[i].top)
 			{
-				if (i == hello)
-				{
-					item.right = m_Break[i].right; item.top = m_Break[i].top;
-					item.left = m_Break[i].left; item.bottom = m_Break[i].bottom;
-					holly = 1;
-				}
-				m_Break[i].SetRectEmpty();
-				y = -y;
-				break;
-			}
-			else if (x == 10 || x == -10 )
-			{
-				if (m_Ball.left == m_Break[i].right || m_Ball.right == m_Break[i].left)
+				if (m_Ball.right <= m_Break[i].right && m_Ball.left >= m_Break[i].left)
 				{
 					if (i == hello)
 					{
@@ -248,36 +288,60 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 						holly = 1;
 					}
 					m_Break[i].SetRectEmpty();
-					x = -x; y = -y;
-					
+					y = -y; bi++; 
+				}
+				else if (y == -10)
+				{
+					if (m_Ball.right == m_Break[i].left || m_Ball.left == m_Break[i].right)
+					{
+						if (i == hello)
+						{
+							item.right = m_Break[i].right; item.top = m_Break[i].top;
+							item.left = m_Break[i].left; item.bottom = m_Break[i].bottom;
+							holly = 1;
+						}
+						m_Break[i].SetRectEmpty();
+						x = -x; y = -y; bi++;
+					}
 				}
 			}
-		}
-  		else if (x == 10 || x == -10)
-		{
-	    	if (m_Ball.left == m_Break[i].right || m_Ball.right == m_Break[i].left)
-	    	{
-	    		if (m_Ball.bottom <= m_Break[i].bottom && m_Ball.top >= m_Break[i].top)
-	    		{
-                    if (i == hello)
+			else if (m_Ball.left == m_Break[i].right || m_Ball.right == m_Break[i].left)
+			{
+				if (m_Ball.bottom <= m_Break[i].bottom && m_Ball.top >= m_Break[i].top)
+				{
+					if (i == hello)
 					{
 						item.right = m_Break[i].right; item.top = m_Break[i].top;
 						item.left = m_Break[i].left; item.bottom = m_Break[i].bottom;
 						holly = 1;
 					}
-	    			m_Break[i].SetRectEmpty();
-	    			x = -x;
-					break;
-	    		}
-            }
+					m_Break[i].SetRectEmpty();
+					x = -x; bi++;
+				}
+			} 
+		}
+		else if (x == 0)
+		{
+			if (m_Ball.top == m_Break[i].bottom || m_Ball.bottom == m_Break[i].top)
+			{
+				if (m_Ball.right <= m_Break[i].right && m_Ball.left >= m_Break[i].left)
+				{
+					if (i == hello)
+					{
+						item.right = m_Break[i].right; item.top = m_Break[i].top;
+						item.left = m_Break[i].left; item.bottom = m_Break[i].bottom;
+						holly = 1;
+					}
+					m_Break[i].SetRectEmpty();
+					y = -y; bi++;
+				}
+			}
 		}
 	}
-	
 
 	if (holly == 1)//아이템 생성
 	{
-		CBrush green;
-	    green.CreateSolidBrush(RGB(0, 240, 0));
+		
 	    dc.SelectObject(&green);
 	    dc.Ellipse(item);
 	    item.OffsetRect(0, 5);
@@ -329,15 +393,41 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 		OnOK();
 	}
 
-
-    if (bi == 50)//게임성공
-	{
-		OnOK();
-	}
-
 	if (a == 1)//공 움직임 시작(스페이스바)
 	{
 		m_Ball.OffsetRect(x, y);
+	}
+
+    if (bi >= 2)//1라운드 성공
+	{
+		dc.SelectObject(&white);
+		dc.Rectangle(0, 0, 500, 500);
+		round = 2;
+		for (int i = 0; i < 50; i++)
+		{
+			m_Break[i].SetRectEmpty();
+		}
+		m_Break[0] = CRect(100, 0, 150, 30);
+		m_Break[1] = CRect(300, 0, 350, 30);
+		m_Break[2] = CRect(50,30 ,100 ,60 );
+		m_Break[3] = CRect(150,30 ,200 ,60 );
+		m_Break[4] = CRect(250, 30, 300,60 );
+		m_Break[5] = CRect(350, 30,400 ,60 );
+		m_Break[6] = CRect(0, 60, 50,90 );
+		m_Break[7] = CRect(200, 60,250 ,90 );
+		m_Break[8] = CRect(400,60 ,450 , 90);
+		m_Break[9] = CRect(0,90 , 50,120 );
+		m_Break[10] = CRect(400,90 ,450 ,120 );
+		m_Break[11] = CRect(0, 120,50 ,150 );
+		m_Break[12] = CRect(400, 120,450 ,150 );
+		m_Break[13] = CRect(50, 150,100 ,180 );
+		m_Break[14] = CRect(350, 150,400 ,180 );
+		m_Break[15] = CRect(100, 180,150 ,210 );
+		m_Break[16] = CRect(300,180 ,350 ,210 );
+		m_Break[17] = CRect(150,210 ,200 ,240 );
+		m_Break[18] = CRect(250,210 , 300,240 );
+		m_Break[19] = CRect(200, 240,250 ,270 );
+		bi = -1000;
 	}
 
     dc.SelectObject(&red); 	

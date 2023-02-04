@@ -3,7 +3,7 @@
 //
 
 #pragma once
-
+#include "CRectJH.h"
 
 // CTimering2Dlg 대화 상자
 class CTimering2Dlg : public CDialogEx
@@ -11,9 +11,11 @@ class CTimering2Dlg : public CDialogEx
 // 생성입니다.
 public:
 	CTimering2Dlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
+	CRectJH m_jhBreak[50];
 	CRect m_Player;
 	CRect m_Ball;
 	CRect m_Break[50];
+	CRect m_Break2[50];
 	CRect item;
 	CRect m_Ball1;
 // 대화 상자 데이터입니다.
@@ -54,4 +56,5 @@ public:
 //	int test;
 	int x;
 	int y;
+	int round;
 };
