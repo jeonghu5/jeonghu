@@ -12,6 +12,7 @@ void CRectJH::set4Rect()
 	way[1].MoveToXY(rect.right - way[1].Width(), rect.top);
 	way[2].MoveToXY(rect.left, rect.bottom- way[2].Height());
 	way[3].MoveToXY(rect.right - way[3].Width(), rect.bottom - way[3].Height());
+
 }
 
 

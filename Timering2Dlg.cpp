@@ -140,29 +140,6 @@ BOOL CTimering2Dlg::OnInitDialog()
 		}
 	}
 
-
-
-	for (int i = 0; i <5; i++)
-	{
-		for(int k=0;k<10;k++)
-		{ 
-		m_Break[10*i+k] = CRect(j, v, j+50, v+30);
-		j = j + 50;
-		}
-		v = v + 30;
-		j = 0;
-	}
-	v = 0;
-	for (int i = 0; i <5; i++)
-	{
-		for(int k=0;k<10;k++)
-		{ 
-		m_Break2[10*i+k] = CRect(j, v, j+50, v+30);
-		j = j + 50;
-		}
-		v = v + 30;
-		j = 0;
-	}
 	item = CRect(0, 0, 20, 20);
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
