@@ -132,7 +132,7 @@ BOOL CTimering2Dlg::OnInitDialog()
 		tmp.MoveToXY(0, 50 * y);
 		for (int x = 0; x < 10; x++)
 		{
-			m_Break[y * 10 + x] = tmp;
+			//m_Break[y * 10 + x] = tmp;
 			m_jhBreak[y * 10 + x] = tmp;
 			m_jhBreak[y * 10 + x].set4Rect();
 
@@ -226,7 +226,8 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 	blue1.CreateSolidBrush(RGB(0, 0, 200));
 
 	CBrush blue[5];
-    int j, zzz = 250;
+	int j;
+	int zzz = 250;
 
 	if (round == 1)
 	{
@@ -236,7 +237,7 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 			dc.SelectObject(&blue[j]);
 			for (int i = 0; i < 10; i++)
 			{
-				dc.Rectangle(m_Break[10 * j + i]);
+				dc.Rectangle(m_jhBreak[10 * j + i]);
 			}
 			zzz = zzz - 40;
 		}
@@ -310,7 +311,7 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 						holly = 1;
 					}
 					m_Break[i].SetRectEmpty();
-					y = -y; bi++;
+					y = -y; bi++; 
 				}
 			}
 		}
@@ -375,35 +376,35 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 		m_Ball.OffsetRect(x, y);
 	}
 
-    if (bi >= 2)//1라운드 성공
+    if (bi >= 10)//1라운드 성공
 	{
 		dc.SelectObject(&white);
 		dc.Rectangle(0, 0, 500, 500);
 		round = 2;
 		for (int i = 0; i < 50; i++)
 		{
-			m_Break[i].SetRectEmpty();
+			m_jhBreak[i].SetRectEmpty();
 		}
-		m_Break[0] = CRect(100, 0, 150, 30);
-		m_Break[1] = CRect(300, 0, 350, 30);
-		m_Break[2] = CRect(50,30 ,100 ,60 );
-		m_Break[3] = CRect(150,30 ,200 ,60 );
-		m_Break[4] = CRect(250, 30, 300,60 );
-		m_Break[5] = CRect(350, 30,400 ,60 );
-		m_Break[6] = CRect(0, 60, 50,90 );
-		m_Break[7] = CRect(200, 60,250 ,90 );
-		m_Break[8] = CRect(400,60 ,450 , 90);
-		m_Break[9] = CRect(0,90 , 50,120 );
-		m_Break[10] = CRect(400,90 ,450 ,120 );
-		m_Break[11] = CRect(0, 120,50 ,150 );
-		m_Break[12] = CRect(400, 120,450 ,150 );
-		m_Break[13] = CRect(50, 150,100 ,180 );
-		m_Break[14] = CRect(350, 150,400 ,180 );
-		m_Break[15] = CRect(100, 180,150 ,210 );
-		m_Break[16] = CRect(300,180 ,350 ,210 );
-		m_Break[17] = CRect(150,210 ,200 ,240 );
-		m_Break[18] = CRect(250,210 , 300,240 );
-		m_Break[19] = CRect(200, 240,250 ,270 );
+		m_jhBreak[0] = CRect(100, 0, 150, 30);
+		m_jhBreak[1] = CRect(300, 0, 350, 30);
+		m_jhBreak[2] = CRect(50,30 ,100 ,60 );
+		m_jhBreak[3] = CRect(150,30 ,200 ,60 );
+		m_jhBreak[4] = CRect(250, 30, 300,60 );
+		m_jhBreak[5] = CRect(350, 30,400 ,60 );
+		m_jhBreak[6] = CRect(0, 60, 50,90 );
+		m_jhBreak[7] = CRect(200, 60,250 ,90 );
+		m_jhBreak[8] = CRect(400,60 ,450 , 90);
+		m_jhBreak[9] = CRect(0,90 , 50,120 );
+		m_jhBreak[10] = CRect(400,90 ,450 ,120 );
+		m_jhBreak[11] = CRect(0, 120,50 ,150 );
+		m_jhBreak[12] = CRect(400, 120,450 ,150 );
+		m_jhBreak[13] = CRect(50, 150,100 ,180 );
+		m_jhBreak[14] = CRect(350, 150,400 ,180 );
+		m_jhBreak[15] = CRect(100, 180,150 ,210 );
+		m_jhBreak[16] = CRect(300,180 ,350 ,210 );
+		m_jhBreak[17] = CRect(150,210 ,200 ,240 );
+		m_jhBreak[18] = CRect(250,210 , 300,240 );
+		m_jhBreak[19] = CRect(200, 240,250 ,270 );
 		bi = -1000;
 	}
 

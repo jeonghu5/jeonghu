@@ -15,7 +15,6 @@ public:
 	CRect m_Player;
 	CRect m_Ball;
 	CRect m_Break[50];
-	CRect m_Break2[50];
 	CRect item;
 	CRect m_Ball1;
 // 대화 상자 데이터입니다.
