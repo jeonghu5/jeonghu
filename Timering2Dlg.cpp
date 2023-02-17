@@ -115,8 +115,9 @@ BOOL CTimering2Dlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	second = 0;
 	x = 0;
-	y = -10;
+	y = -5;
 	round = 1;
 	srand((unsigned int)time(NULL));
 	hello = rand()%10+40;
@@ -129,14 +130,14 @@ BOOL CTimering2Dlg::OnInitDialog()
 	for (int y = 0; y < 5; y++)
 	{
 		tmp = CRect(0, 0, 50, 30);
-		tmp.MoveToXY(0, 50 * y);
+		tmp.MoveToXY(0, 32 * y);
 		for (int x = 0; x < 10; x++)
 		{
 			//m_Break[y * 10 + x] = tmp;
 			m_jhBreak[y * 10 + x] = tmp;
 			m_jhBreak[y * 10 + x].set4Rect();
 
-			tmp.OffsetRect(50, 0);
+			tmp.OffsetRect(52, 0);
 		}
 	}
 
@@ -200,7 +201,7 @@ void CTimering2Dlg::OnBnClickedButton1()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	
-	SetTimer(1, 50, NULL);
+	SetTimer(1, 100, NULL);
 }
 
 
@@ -211,13 +212,21 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	CClientDC dc(this);
 	CRect hi;
-	dc.Rectangle(0, 0, 500, 500);
+
+	CBrush white;
+	white.CreateSolidBrush(RGB(255,255, 255));
+
+	if (second == 3)
+	{
+		dc.SelectObject(&white);
+		dc.Rectangle(0, 0, 500, 500);
+		second = 0;
+	}
 
 	CBrush red;
 	red.CreateSolidBrush(RGB(200, 0, 0));
 	
-	CBrush white;
-	white.CreateSolidBrush(RGB(255,255, 255));
+	
 
     CBrush green;
 	green.CreateSolidBrush(RGB(0, 240, 0));
@@ -251,7 +260,7 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 		}
 	}
 
-	for (int i = 0; i < 50; i++)//벽돌에 닿았을때
+	/*for (int i = 0; i < 50; i++)//벽돌에 닿았을때
 	{
 		if (x == 10 || x == -10)
 		{
@@ -315,7 +324,36 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 				}
 			}
 		}
+	}*/
+
+	for (int i = 0; i < 50; i++)
+	{
+		if (IntersectRect(&hi, &m_jhBreak[i],&m_Ball))
+		{
+			if (i == hello)
+			{
+				item.right = m_jhBreak[i].right; item.top = m_jhBreak[i].top;
+				item.left = m_jhBreak[i].left; item.bottom = m_jhBreak[i].bottom;
+				holly = 1;
+			}
+			m_Break[i].SetRectEmpty();
+			int breakingpart = 1;
+
+		    if (breakingpart == 0 || breakingpart == 1 || breakingpart == 2 || breakingpart == 3)
+		    {
+				x = -x; y = -y; m_Ball.OffsetRect(x, y);
+			}
+			else if (breakingpart == 4 || breakingpart == 5)
+			{
+				y = -y; m_Ball.OffsetRect(x, y);
+			}
+			else if (breakingpart == 6 || breakingpart == 7)
+			{
+				x = -x; m_Ball.OffsetRect(x, y);
+			}	
+		}
 	}
+
 
 	if (holly == 1)//아이템 생성
 	{
@@ -341,22 +379,22 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 		{
 			if (c + 5 < d)//오른쪽으로
 			{
-				x = 10; y = -10;
+				x = 5; y = -5;
 			}
 			else if (c - 5 > d)//왼쪽으로
 			{
-				x = -10; y = -10;
+				x = -5; y = -5;
 			}
 			else//위쪽으로
 			{
-				x = 0; y = -10;
+				x = 0; y = -5;
 			}
 		}
 	}
 
 	if (m_Ball.top ==0)//위쪽벽
 	{
-		y = 10;
+		y = 5;
 	}
 	if (m_Ball.left ==0)//왼쪽벽
 	{
@@ -408,9 +446,11 @@ void CTimering2Dlg::OnTimer(UINT_PTR nIDEvent)
 		bi = -1000;
 	}
 
+	second++;
     dc.SelectObject(&red); 	
 	dc.Rectangle(m_Player);
-    dc.Ellipse(m_Ball);
+	dc.Ellipse(m_Ball);
+	
   	CDialogEx::OnTimer(nIDEvent);
 }
 

@@ -25,19 +25,12 @@ int CRectJH::Check4Rect(CRect t)
 {
 	// TODO: 여기에 구현 코드 추가.
 	CRect tmp;
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		if (tmp.IntersectRect(way[i], t)) {
 			return i;
 		}
 	}
-	for (int i = 4; i <= 5; i++)
-	{
-		if (tmp.IntersectRect(way[i], t)) {
-			return i;
-		}
-	}
-
 
 	return -1;
 }

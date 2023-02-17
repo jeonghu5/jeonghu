@@ -17,6 +17,7 @@ public:
 	CRect m_Break[50];
 	CRect item;
 	CRect m_Ball1;
+	int second;
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_TIMERING2_DIALOG };
